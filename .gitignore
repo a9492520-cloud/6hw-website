@@ -1,0 +1,9 @@
+# 不要上傳的檔案（部署條件：排除 PPT）
+*.pptx
+*.ppt
+
+# 系統與暫存檔
+Thumbs.db
+.DS_Store
+__pycache__/
+*.pyc

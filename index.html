@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusPay+ | 新世代頂級遊戲代儲與極速交易平台</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        nexus: {
+                            50: '#f0fdf4',
+                            500: '#10b981',
+                            600: '#059669',
+                            900: '#064e3b',
+                            dark: '#060913',
+                            card: '#111827',
+                            border: '#1f2937',
+                            accent: '#38bdf8',
+                            violet: '#8b5cf6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+            background-color: #060913;
+            color: #f3f4f6;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #060913; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+
+        /* Pulsing voice animation for senior mode */
+        @keyframes voicePulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+            70% { box-shadow: 0 0 0 18px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .voice-active {
+            animation: voicePulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white transition-all duration-300">
+
+    <!-- Top Glow Guarantee Banner (Standard Mode) -->
+    <div id="standardTopBanner" class="bg-gradient-to-r from-violet-900 via-indigo-900 to-emerald-900 text-xs py-2.5 px-4 text-center text-violet-200 font-medium flex items-center justify-center gap-2 border-b border-violet-800/40">
+        <span class="bg-emerald-500 text-slate-950 font-bold px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">SECURE 2.0</span>
+        <span>【Nexus 系統保證】全平台交易支援官方合約保證與 100% 官方直充憑證，杜絕黑卡與回收鑽。</span>
+        <span class="hidden md:inline bg-violet-800/80 px-2.5 py-0.5 rounded text-white font-semibold">首儲折抵 NT$100</span>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="sticky top-0 z-50 bg-[#060913]/90 backdrop-blur-xl border-b border-slate-800/80 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3">
+                <a href="#" class="flex items-center space-x-3 group">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 flex items-center justify-center text-slate-950 font-black text-2xl shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition duration-300">
+                        <i class="fa-solid fa-cube"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent tracking-tight">NEXUSPAY</span>
+                        <span class="block text-[10px] text-slate-400 tracking-widest font-semibold uppercase">Next-Gen Top-Up</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Smart Search Bar (Standard Desktop Mode) -->
+            <div id="standardHeaderSearch" class="hidden lg:flex flex-1 max-w-lg mx-10 relative">
+                <div class="relative w-full group">
+                    <input type="text" id="headerSearchInput" placeholder="搜尋遊戲名稱 (例：原神、RO、鳴潮、Steam...) 或代儲服務..." class="w-full bg-slate-900/90 border border-slate-800 rounded-2xl pl-12 pr-28 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15 transition duration-300">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-400 transition">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <button onclick="triggerSearch()" class="absolute right-1.5 top-1.5 bottom-1.5 px-5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-slate-950 font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5">
+                        <span>智慧搜尋</span>
+                    </button>
+                </div>
+                <!-- Auto-complete Suggestions Box -->
+                <div id="searchDropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden z-50 backdrop-blur-xl">
+                    <div class="p-3 text-xs text-slate-400 font-semibold border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-bolt text-emerald-400"></i> 熱門搜尋與智慧推薦</span>
+                        <span class="text-slate-500 text-[10px]">支援關鍵字比價</span>
+                    </div>
+                    <div class="divide-y divide-slate-800/60 max-h-60 overflow-y-auto" id="searchSuggestionsList">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Header Action Controls & Senior Mode Switch -->
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <!-- One-Click Senior Mode Toggle -->
+                <div class="flex items-center bg-emerald-950/60 border border-emerald-500/40 rounded-2xl px-3.5 py-1.5 shadow-inner">
+                    <div class="mr-2 text-left hidden sm:block">
+                        <span id="seniorModeLabel" class="block text-xs font-black text-emerald-300">長輩關懷模式</span>
+                        <span class="block text-[9px] text-slate-400">極簡三大類別 + 語音點選</span>
+                    </div>
+                    <button id="seniorToggleBtn" onclick="toggleSeniorMode()" class="relative inline-flex h-8 w-16 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-slate-800" role="switch" aria-checked="false">
+                        <span id="seniorToggleThumb" class="pointer-events-none inline-block h-7 w-7 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out translate-x-0"></span>
+                    </button>
+                </div>
+
+                <!-- Niche Game Direct Button (Standard Mode) -->
+                <button id="standardNicheBtn" onclick="openNicheModal()" class="hidden md:flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-teal-300 px-4 py-2.5 rounded-2xl text-xs font-bold border border-teal-500/30 transition shadow-lg shadow-teal-500/5">
+                    <i class="fa-solid fa-compass text-teal-400"></i>
+                    <span>冷門遊戲直達</span>
+                </button>
+
+                <!-- Fast Top-Up Wizard Trigger (Standard Mode) -->
+                <button id="standardWizardBtn" onclick="openTopUpWizard()" class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black shadow-lg shadow-emerald-500/25 flex items-center gap-2 transition transform active:scale-95">
+                    <i class="fa-solid fa-bolt-lightning text-slate-950"></i>
+                    <span>一鍵極速代儲</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= 1. STANDARD MARKETPLACE VIEW ================= -->
+    <main id="standardMainView" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+
+        <!-- Mobile Search Bar -->
+        <div class="lg:hidden relative">
+            <div class="relative w-full">
+                <input type="text" id="mobileSearchInput" placeholder="搜尋遊戲名稱或代儲..." class="w-full bg-slate-900 border border-slate-800 rounded-2xl pl-12 pr-24 py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <button onclick="triggerSearch()" class="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-emerald-500 text-slate-950 font-bold text-xs rounded-xl">搜尋</button>
+            </div>
+        </div>
+
+        <!-- Hero Banner & Quick Category Grid -->
+        <section class="bg-gradient-to-b from-slate-900/90 to-slate-950 border border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute left-10 -top-10 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold mb-3">
+                        <i class="fa-solid fa-shield-halved"></i> 智慧比價與合約擔保引擎 v3.5
+                    </div>
+                    <h1 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                        極速比價，安心代儲。尋找全網最優價格。
+                    </h1>
+                    <p class="text-slate-400 text-sm mt-2 max-w-2xl leading-relaxed">
+                        告別傳統代儲繁瑣與黑卡風險。NexusPay 提供智能比價、賣家即時速度評分、合約賠付保證，讓您輕鬆直達上千款熱門與冷門遊戲。
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="openNicheModal()" class="bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-white px-4 py-3 rounded-2xl text-xs font-bold flex items-center gap-2 transition shadow">
+                        <i class="fa-solid fa-compass text-teal-400"></i>
+                        <span>冷門遊戲直達專區</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3">
+                <div onclick="filterGame('all')" class="game-pill cursor-pointer bg-emerald-500/10 border border-emerald-500/40 hover:bg-emerald-500 hover:text-slate-950 rounded-2xl p-3.5 text-center transition group">
+                    <i class="fa-solid fa-globe text-emerald-400 group-hover:text-slate-950 text-xl mb-1 block"></i>
+                    <span class="text-xs font-bold text-slate-200 group-hover:text-slate-950">全部遊戲</span>
+                </div>
+                <div onclick="filterGame('roto')" class="game-pill cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-2xl p-3.5 text-center transition group">
+                    <i class="fa-solid fa-shield-halved text-cyan-400 text-xl mb-1 block"></i>
+                    <span class="text-xs font-bold text-slate-200">RO仙境傳說</span>
+                </div>
+                <div onclick="filterGame('genshin')" class="game-pill cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-2xl p-3.5 text-center transition group">
+                    <i class="fa-solid fa-wand-magic-sparkles text-violet-400 text-xl mb-1 block"></i>
+                    <span class="text-xs font-bold text-slate-200">原神 / 星穹</span>
+                </div>
+                <div onclick="filterGame('lineage')" class="game-pill cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-2xl p-3.5 text-center transition group">
+                    <i class="fa-solid fa-crown text-amber-400 text-xl mb-1 block"></i>
+                    <span class="text-xs font-bold text-slate-200">天堂 W / M</span>
+                </div>
+                <div onclick="filterGame('hok')" class="game-pill cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-2xl p-3.5 text-center transition group">
+                    <i class="fa-solid fa-chess-knight text-rose-400 text-xl mb-1 block"></i>
+                    <span class="text-xs font-bold text-slate-200">傳說對決</span>
+                </div>
+                <div onclick="filterGame('kuro')" class="game-pill cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-2xl p-3.5 text-center transition group">
+                    <i class="fa-solid fa-meteor text-teal-400 text-xl mb-1 block"></i>
+                    <span class="text-xs font-bold text-slate-200">鳴潮 / 絕區零</span>
+                </div>
+                <div onclick="filterGame('steam')" class="game-pill cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-2xl p-3.5 text-center transition group">
+                    <i class="fa-brands fa-steam text-slate-300 text-xl mb-1 block"></i>
+                    <span class="text-xs font-bold text-slate-200">Steam點數</span>
+                </div>
+                <div onclick="openNicheModal()" class="game-pill cursor-pointer bg-gradient-to-r from-teal-950/40 to-cyan-950/40 border border-teal-500/30 hover:border-teal-400 rounded-2xl p-3.5 text-center transition group">
+                    <i class="fa-solid fa-box-archive text-cyan-400 text-xl mb-1 block"></i>
+                    <span class="text-xs font-bold text-cyan-300">小眾/冷門專區</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Search & Comparison Mechanism Toolbar & Listings -->
+        <section class="space-y-6">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl backdrop-blur-md space-y-4">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <!-- Sort Buttons -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs text-slate-400 font-bold mr-2"><i class="fa-solid fa-filter text-emerald-400"></i> 比價與排序引擎:</span>
+                        <button onclick="sortListings('price-asc')" class="sort-btn active bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-xs font-bold shadow transition">最低價格優先</button>
+                        <button onclick="sortListings('speed')" class="sort-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold border border-slate-700/80 transition">極速到帳 (&lt;5分)</button>
+                        <button onclick="sortListings('safety')" class="sort-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold border border-slate-700/80 transition">最高安全指數</button>
+                        <button onclick="sortListings('discount')" class="sort-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold border border-slate-700/80 transition">超高折數省錢</button>
+                    </div>
+
+                    <!-- Filter Checkboxes -->
+                    <div class="flex items-center space-x-4 text-xs text-slate-300">
+                        <label class="flex items-center space-x-2 cursor-pointer bg-slate-800/60 px-3 py-1.5 rounded-xl border border-slate-700/60">
+                            <input type="checkbox" id="officialOnly" onchange="applyFilters()" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-emerald-500">
+                            <span>官方合約店</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer bg-slate-800/60 px-3 py-1.5 rounded-xl border border-slate-700/60">
+                            <input type="checkbox" id="fastOnly" onchange="applyFilters()" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-emerald-500">
+                            <span>24h 極速發貨</span>
+                        </label>
+                        <span class="text-emerald-400 font-bold text-sm ml-2" id="resultCount">共 6 筆商品</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listings Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="listingsContainer">
+                
+                <!-- Card 1 -->
+                <div class="listing-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-3xl p-6 shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden group" data-game="roto" data-price="2790" data-speed="3" data-safety="99" data-discount="85">
+                    <div class="absolute top-0 right-0 bg-gradient-to-l from-emerald-500 to-teal-500 text-slate-950 text-[10px] font-black px-4 py-1.5 rounded-bl-2xl shadow">
+                        8.5折 · 官方保證
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3 pr-16">
+                            <span class="bg-emerald-950 text-emerald-300 border border-emerald-800/60 text-[11px] font-bold px-2.5 py-1 rounded-xl">RO 仙境傳說：愛如初見</span>
+                            <div class="flex items-center text-emerald-400 text-xs font-bold gap-1 bg-emerald-950/60 px-2.5 py-1 rounded-xl border border-emerald-800/60">
+                                <i class="fa-solid fa-shield-check"></i> 99.8%
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-100 mb-2 group-hover:text-emerald-300 transition line-clamp-1">
+                            【官方直充】RO愛如初見 6480貓小晶 + 首儲雙倍禮包
+                        </h3>
+                        <div class="flex flex-wrap gap-2 my-3">
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-bolt text-amber-400"></i> 平均3分鐘到帳</span>
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-id-card text-cyan-400"></i> 僅需遊戲ID</span>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between mt-3">
+                        <div>
+                            <div class="text-xs text-slate-500 line-through">原價 NT$ 3,290</div>
+                            <div class="text-xl font-black text-emerald-400">NT$ 2,790 <span class="text-xs text-slate-400 font-normal">/ 6480鑽</span></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="compareItem('RO愛如初見 6480貓小晶', 2790)" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-3 rounded-2xl text-xs transition" title="多賣家即時比價">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </button>
+                            <button onclick="startWizardWithItem('RO 仙境傳說：愛如初見', '6480貓小晶', 2790)" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-4 py-2.5 rounded-2xl text-xs font-extrabold shadow-lg shadow-emerald-500/20 transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-cart-shopping"></i> 快速代儲
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="listing-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-3xl p-6 shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden group" data-game="genshin" data-price="1490" data-speed="5" data-safety="100" data-discount="90">
+                    <div class="absolute top-0 right-0 bg-gradient-to-l from-violet-600 to-indigo-600 text-white text-[10px] font-black px-4 py-1.5 rounded-bl-2xl shadow">
+                        官方合約店
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3 pr-16">
+                            <span class="bg-violet-950 text-violet-300 border border-violet-800/60 text-[11px] font-bold px-2.5 py-1 rounded-xl">原神 / 崩壞：星穹鐵道</span>
+                            <div class="flex items-center text-emerald-400 text-xs font-bold gap-1 bg-emerald-950/60 px-2.5 py-1 rounded-xl border border-emerald-800/60">
+                                <i class="fa-solid fa-shield-check"></i> 100%
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-100 mb-2 group-hover:text-emerald-300 transition line-clamp-1">
+                            【米哈遊直營】創世結晶 6480 結晶包 + 滿月卡序號
+                        </h3>
+                        <div class="flex flex-wrap gap-2 my-3">
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-bolt text-amber-400"></i> 平均5分鐘</span>
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-shield text-emerald-400"></i> 零封號保證</span>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between mt-3">
+                        <div>
+                            <div class="text-xs text-slate-500 line-through">原價 NT$ 1,700</div>
+                            <div class="text-xl font-black text-emerald-400">NT$ 1,490 <span class="text-xs text-slate-400 font-normal">/ 6480結晶</span></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="compareItem('原神 6480結晶', 1490)" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-3 rounded-2xl text-xs transition" title="多賣家即時比價">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </button>
+                            <button onclick="startWizardWithItem('原神 / 崩壞：星穹鐵道', '6480創世結晶', 1490)" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-4 py-2.5 rounded-2xl text-xs font-extrabold shadow-lg shadow-emerald-500/20 transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-cart-shopping"></i> 快速代儲
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="listing-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-3xl p-6 shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden group" data-game="lineage" data-price="4900" data-speed="15" data-safety="98" data-discount="80">
+                    <div class="absolute top-0 right-0 bg-gradient-to-l from-amber-500 to-orange-500 text-slate-950 text-[10px] font-black px-4 py-1.5 rounded-bl-2xl shadow">
+                        熱銷金主直營
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3 pr-16">
+                            <span class="bg-amber-950 text-amber-300 border border-amber-800/60 text-[11px] font-bold px-2.5 py-1 rounded-xl">天堂 W / 天堂M</span>
+                            <div class="flex items-center text-emerald-400 text-xs font-bold gap-1 bg-emerald-950/60 px-2.5 py-1 rounded-xl border border-emerald-800/60">
+                                <i class="fa-solid fa-shield-check"></i> 98.5%
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-100 mb-2 group-hover:text-emerald-300 transition line-clamp-1">
+                            【工作室直營】天堂W 鑽石 10000鑽 急速交易所掛物發貨
+                        </h3>
+                        <div class="flex flex-wrap gap-2 my-3">
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-store text-indigo-400"></i> 交易所安全交易</span>
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-headset text-teal-400"></i> 專人1對1</span>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between mt-3">
+                        <div>
+                            <div class="text-xs text-slate-500 line-through">原價 NT$ 6,000</div>
+                            <div class="text-xl font-black text-emerald-400">NT$ 4,900 <span class="text-xs text-slate-400 font-normal">/ 1萬鑽</span></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="compareItem('天堂W 1萬鑽', 4900)" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-3 rounded-2xl text-xs transition" title="多賣家即時比價">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </button>
+                            <button onclick="startWizardWithItem('天堂 W / 天堂M', '10000鑽石', 4900)" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-4 py-2.5 rounded-2xl text-xs font-extrabold shadow-lg shadow-emerald-500/20 transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-cart-shopping"></i> 快速代儲
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="listing-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-3xl p-6 shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden group" data-game="hok" data-price="290" data-speed="2" data-safety="100" data-discount="95">
+                    <div class="absolute top-0 right-0 bg-gradient-to-l from-cyan-500 to-blue-500 text-slate-950 text-[10px] font-black px-4 py-1.5 rounded-bl-2xl shadow">
+                        API 秒發
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3 pr-16">
+                            <span class="bg-cyan-950 text-cyan-300 border border-cyan-800/60 text-[11px] font-bold px-2.5 py-1 rounded-xl">傳說對決 / 王者榮耀</span>
+                            <div class="flex items-center text-emerald-400 text-xs font-bold gap-1 bg-emerald-950/60 px-2.5 py-1 rounded-xl border border-emerald-800/60">
+                                <i class="fa-solid fa-shield-check"></i> 100%
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-100 mb-2 group-hover:text-emerald-300 transition line-clamp-1">
+                            【官方API直充】傳說對決 1200 點券 (免密碼 填OpenID即達)
+                        </h3>
+                        <div class="flex flex-wrap gap-2 my-3">
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-bolt text-amber-400"></i> 1分鐘自動到帳</span>
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-shield-halved text-emerald-400"></i> 官方授權</span>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between mt-3">
+                        <div>
+                            <div class="text-xs text-slate-500 line-through">原價 NT$ 320</div>
+                            <div class="text-xl font-black text-emerald-400">NT$ 290 <span class="text-xs text-slate-400 font-normal">/ 1200點券</span></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="compareItem('傳說對決 1200點券', 290)" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-3 rounded-2xl text-xs transition" title="多賣家即時比價">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </button>
+                            <button onclick="startWizardWithItem('傳說對決', '1200點券', 290)" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-4 py-2.5 rounded-2xl text-xs font-extrabold shadow-lg shadow-emerald-500/20 transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-cart-shopping"></i> 快速代儲
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="listing-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-3xl p-6 shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden group" data-game="kuro" data-price="890" data-speed="8" data-safety="99" data-discount="88">
+                    <div class="absolute top-0 right-0 bg-gradient-to-l from-teal-500 to-emerald-600 text-slate-950 text-[10px] font-black px-4 py-1.5 rounded-bl-2xl shadow">
+                        熱門暢銷
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3 pr-16">
+                            <span class="bg-teal-950 text-teal-300 border border-teal-800/60 text-[11px] font-bold px-2.5 py-1 rounded-xl">鳴潮 Wuthering Waves</span>
+                            <div class="flex items-center text-emerald-400 text-xs font-bold gap-1 bg-emerald-950/60 px-2.5 py-1 rounded-xl border border-emerald-800/60">
+                                <i class="fa-solid fa-shield-check"></i> 99.5%
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-100 mb-2 group-hover:text-emerald-300 transition line-clamp-1">
+                            【庫洛官方直充】鳴潮 3280 星聲 + 額外滿月卡序號組合
+                        </h3>
+                        <div class="flex flex-wrap gap-2 my-3">
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-bolt text-amber-400"></i> 快速到帳</span>
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-user-check text-cyan-400"></i> 官方白卡</span>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between mt-3">
+                        <div>
+                            <div class="text-xs text-slate-500 line-through">原價 NT$ 1,000</div>
+                            <div class="text-xl font-black text-emerald-400">NT$ 890 <span class="text-xs text-slate-400 font-normal">/ 3280星聲</span></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="compareItem('鳴潮 3280星聲', 890)" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-3 rounded-2xl text-xs transition" title="多賣家即時比價">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </button>
+                            <button onclick="startWizardWithItem('鳴潮', '3280星聲', 890)" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-4 py-2.5 rounded-2xl text-xs font-extrabold shadow-lg shadow-emerald-500/20 transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-cart-shopping"></i> 快速代儲
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="listing-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-3xl p-6 shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden group" data-game="niche" data-price="450" data-speed="20" data-safety="96" data-discount="82">
+                    <div class="absolute top-0 right-0 bg-gradient-to-l from-rose-500 to-pink-500 text-white text-[10px] font-black px-4 py-1.5 rounded-bl-2xl shadow">
+                        冷門直達
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3 pr-16">
+                            <span class="bg-rose-950 text-rose-300 border border-rose-800/60 text-[11px] font-bold px-2.5 py-1 rounded-xl">小眾日服 / 韓服手遊專區</span>
+                            <div class="flex items-center text-emerald-400 text-xs font-bold gap-1 bg-emerald-950/60 px-2.5 py-1 rounded-xl border border-emerald-800/60">
+                                <i class="fa-solid fa-shield-check"></i> 96.0%
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-100 mb-2 group-hover:text-emerald-300 transition line-clamp-1">
+                            【日韓服代儲】蔚藍檔案 / 賽馬娘 / FGO 日版禮包全系列代購
+                        </h3>
+                        <div class="flex flex-wrap gap-2 my-3">
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-globe text-cyan-400"></i> 日韓直送</span>
+                            <span class="bg-slate-800 text-slate-300 text-[11px] px-2.5 py-1 rounded-xl border border-slate-700 flex items-center gap-1"><i class="fa-solid fa-file-invoice text-violet-400"></i> 支援Google/Apple</span>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between mt-3">
+                        <div>
+                            <div class="text-xs text-slate-500 line-through">原價 NT$ 550</div>
+                            <div class="text-xl font-black text-emerald-400">NT$ 450 <span class="text-xs text-slate-400 font-normal">/ 3000円禮包</span></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="compareItem('日韓服專區 3000円禮包', 450)" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-3 rounded-2xl text-xs transition" title="多賣家即時比價">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </button>
+                            <button onclick="startWizardWithItem('日韓服手遊 (賽馬娘/蔚藍檔案)', '3000円等值禮包', 450)" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-4 py-2.5 rounded-2xl text-xs font-extrabold shadow-lg shadow-emerald-500/20 transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-cart-shopping"></i> 快速代儲
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Trust Highlights -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl flex items-start space-x-4">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl flex-shrink-0 border border-emerald-500/20">
+                    <i class="fa-solid fa-shield-cat"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-base text-slate-100 mb-1">合約保證 100% 賠付</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">平台全程擔保交易。若發生任何回收鑽或封號問題，經查證屬實由平台先行全額賠償。</p>
+                </div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl flex items-start space-x-4">
+                <div class="w-12 h-12 rounded-2xl bg-teal-500/10 text-teal-400 flex items-center justify-center text-xl flex-shrink-0 border border-teal-500/20">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-base text-slate-100 mb-1">極速發貨 5分鐘到帳</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">串接各大遊戲官方API或頂級專業工作室，24小時自動化發貨，免長時間等待。</p>
+                </div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl flex items-start space-x-4">
+                <div class="w-12 h-12 rounded-2xl bg-violet-500/10 text-violet-400 flex items-center justify-center text-xl flex-shrink-0 border border-violet-500/20">
+                    <i class="fa-solid fa-face-smile-beam"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-base text-slate-100 mb-1">一鍵長輩友善模式</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">專為不熟悉複雜介面的玩家與長輩設計，三大分類導引、超大按鈕與語音輸入。</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= 2. REIMAGINED ULTRA-MINIMALIST SENIOR MODE VIEW ================= -->
+    <main id="seniorMainView" class="hidden flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- Senior Header Welcome Banner -->
+        <div class="bg-gradient-to-r from-emerald-900/80 via-teal-900/80 to-slate-900 border-2 border-emerald-500/60 rounded-3xl p-6 sm:p-8 text-center space-y-3 shadow-2xl">
+            <div class="inline-flex items-center gap-2 bg-emerald-500 text-slate-950 px-4 py-1.5 rounded-full font-black text-sm uppercase tracking-wider">
+                <i class="fa-solid fa-heart"></i> 長輩極簡代儲通道
+            </div>
+            <h2 class="text-2xl sm:text-4xl font-black text-white">請選擇您要儲值的遊戲類型</h2>
+            <p class="text-slate-300 text-base sm:text-xl font-bold">字體大、步驟少、不搞複雜按鈕，輕鬆 3 步驟完成儲值！</p>
+        </div>
+
+        <!-- STEP 1: Three Main Categories (1. 手機遊戲 2. 電腦遊戲 3. 其他類別) -->
+        <div id="seniorStep1Categories" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Category 1: Mobile Games -->
+            <button onclick="seniorSelectCategory('手機遊戲')" class="group bg-slate-900 hover:bg-emerald-950/80 border-4 border-slate-800 hover:border-emerald-500 rounded-3xl p-8 text-center transition-all duration-300 shadow-2xl flex flex-col items-center justify-center space-y-4">
+                <div class="w-24 h-24 rounded-full bg-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-slate-950 flex items-center justify-center text-5xl transition border-2 border-emerald-500/40">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <div class="space-y-1">
+                    <span class="block text-2xl font-black text-white">1. 手機遊戲</span>
+                    <span class="block text-sm text-slate-400 group-hover:text-emerald-200">蘋果 iPhone / 安卓手機遊戲</span>
+                </div>
+                <span class="bg-emerald-500/20 text-emerald-300 text-xs font-bold px-4 py-1.5 rounded-full border border-emerald-500/30">例如：原神、RO、天堂M</span>
+            </button>
+
+            <!-- Category 2: PC Games -->
+            <button onclick="seniorSelectCategory('電腦遊戲')" class="group bg-slate-900 hover:bg-cyan-950/80 border-4 border-slate-800 hover:border-cyan-500 rounded-3xl p-8 text-center transition-all duration-300 shadow-2xl flex flex-col items-center justify-center space-y-4">
+                <div class="w-24 h-24 rounded-full bg-cyan-500/20 text-cyan-400 group-hover:bg-cyan-500 group-hover:text-slate-950 flex items-center justify-center text-5xl transition border-2 border-cyan-500/40">
+                    <i class="fa-solid fa-desktop"></i>
+                </div>
+                <div class="space-y-1">
+                    <span class="block text-2xl font-black text-white">2. 電腦遊戲</span>
+                    <span class="block text-sm text-slate-400 group-hover:text-cyan-200">Steam / 電腦線上遊戲</span>
+                </div>
+                <span class="bg-cyan-500/20 text-cyan-300 text-xs font-bold px-4 py-1.5 rounded-full border border-cyan-500/30">例如：Steam點數、英雄聯盟</span>
+            </button>
+
+            <!-- Category 3: Others -->
+            <button onclick="seniorSelectCategory('其他類別')" class="group bg-slate-900 hover:bg-violet-950/80 border-4 border-slate-800 hover:border-violet-500 rounded-3xl p-8 text-center transition-all duration-300 shadow-2xl flex flex-col items-center justify-center space-y-4">
+                <div class="w-24 h-24 rounded-full bg-violet-500/20 text-violet-400 group-hover:bg-violet-500 group-hover:text-slate-950 flex items-center justify-center text-5xl transition border-2 border-violet-500/40">
+                    <i class="fa-solid fa-shapes"></i>
+                </div>
+                <div class="space-y-1">
+                    <span class="block text-2xl font-black text-white">3. 其他類別</span>
+                    <span class="block text-sm text-slate-400 group-hover:text-violet-200">點數卡 / 主機遊戲 / 人工尋找</span>
+                </div>
+                <span class="bg-violet-500/20 text-violet-300 text-xs font-bold px-4 py-1.5 rounded-full border border-violet-500/30">冷門遊戲、MyCard、日本禮卡</span>
+            </button>
+
+        </div>
+
+        <!-- STEP 2: Input / Voice Game Name Panel -->
+        <div id="seniorStep2Input" class="hidden bg-slate-900 border-4 border-emerald-500/80 rounded-3xl p-6 sm:p-10 space-y-8 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-emerald-500 text-slate-950 font-black text-lg px-4 py-1 rounded-full" id="seniorSelectedCatBadge">已選擇：手機遊戲</span>
+                    <h3 class="text-xl sm:text-2xl font-black text-white">請輸入或「用語音」說出遊戲名稱</h3>
+                </div>
+                <button onclick="seniorBackToStep1()" class="text-slate-400 hover:text-white bg-slate-800 px-4 py-2 rounded-2xl text-sm font-bold border border-slate-700">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> 重選類別
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <label class="block text-lg font-bold text-slate-200">點擊下方框框打字，或點擊右側綠色「語音輸入」按鈕：</label>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="relative flex-1">
+                        <input type="text" id="seniorGameInput" placeholder="請輸入遊戲名稱（例如：原神）" class="w-full bg-slate-950 border-4 border-slate-700 rounded-3xl px-6 py-5 text-xl font-bold text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+                    </div>
+                    
+                    <!-- Voice Input Button -->
+                    <button id="seniorVoiceBtn" onclick="triggerSeniorVoiceInput()" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-8 py-5 rounded-3xl text-xl font-black shadow-xl flex items-center justify-center gap-3 transition transform active:scale-95 flex-shrink-0">
+                        <i class="fa-solid fa-microphone text-2xl"></i>
+                        <span id="seniorVoiceBtnText">按此語音輸入</span>
+                    </button>
+                </div>
+
+                <!-- Voice Status Indicator Message -->
+                <div id="voiceStatusMsg" class="hidden bg-emerald-950/80 border-2 border-emerald-500 text-emerald-300 p-4 rounded-2xl text-center text-lg font-bold flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-compact-disc fa-spin text-2xl text-emerald-400"></i>
+                    <span>系統正在聆聽中...請大聲說出您的遊戲名稱（例如：「原神」或「天堂」）</span>
+                </div>
+            </div>
+
+            <!-- Frequently Selected Senior Games Quick Buttons -->
+            <div class="space-y-3">
+                <span class="block text-base font-bold text-slate-400">熱門遊戲點選直達（點一下即可）：</span>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="seniorQuickSelect('RO 仙境傳說')" class="bg-slate-800 hover:bg-emerald-600 hover:text-slate-950 text-white font-black px-6 py-3 rounded-2xl text-base border border-slate-700 transition">RO 仙境傳說</button>
+                    <button onclick="seniorQuickSelect('原神')" class="bg-slate-800 hover:bg-emerald-600 hover:text-slate-950 text-white font-black px-6 py-3 rounded-2xl text-base border border-slate-700 transition">原神</button>
+                    <button onclick="seniorQuickSelect('天堂 W')" class="bg-slate-800 hover:bg-emerald-600 hover:text-slate-950 text-white font-black px-6 py-3 rounded-2xl text-base border border-slate-700 transition">天堂 W / M</button>
+                    <button onclick="seniorQuickSelect('傳說對決')" class="bg-slate-800 hover:bg-emerald-600 hover:text-slate-950 text-white font-black px-6 py-3 rounded-2xl text-base border border-slate-700 transition">傳說對決</button>
+                    <button onclick="seniorQuickSelect('鳴潮')" class="bg-slate-800 hover:bg-emerald-600 hover:text-slate-950 text-white font-black px-6 py-3 rounded-2xl text-base border border-slate-700 transition">鳴潮</button>
+                </div>
+            </div>
+
+            <button onclick="seniorConfirmGameAndNext()" class="w-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black py-6 rounded-3xl text-2xl transition shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-3">
+                <span>下一步：選擇要儲值的金額包</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-8 mt-16 text-center text-slate-500 text-xs space-y-3">
+        <div class="flex justify-center space-x-6 font-semibold">
+            <a href="#" class="hover:text-slate-300 transition">關於 NEXUSPAY</a>
+            <a href="#" class="hover:text-slate-300 transition">服務合約</a>
+            <a href="#" class="hover:text-slate-300 transition">隱私權政策</a>
+            <a href="#" class="hover:text-slate-300 transition">客服中心</a>
+            <a href="#" class="hover:text-slate-300 transition">合約擔保條款</a>
+        </div>
+        <p>© 2026 NEXUSPAY+ Next-Gen Game Top-Up & Trading Ecosystem. All rights reserved.</p>
+        <p class="text-[10px] text-slate-600">本平台僅提供遊戲虛擬商品及代儲仲介服務，與各大遊戲原廠無直接隸屬關係。</p>
+    </footer>
+
+    <!-- ================= MODAL 1: Niche Game Direct Drawer ================= -->
+    <div id="nicheModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeNicheModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white bg-slate-800 w-9 h-9 rounded-full flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-teal-500/10 text-teal-400 rounded-2xl flex items-center justify-center text-xl border border-teal-500/20">
+                    <i class="fa-solid fa-compass"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">冷門與小眾遊戲直達專區</h3>
+                    <p class="text-xs text-slate-400">找不到想儲值的冷門手遊、日服、獨立遊戲？點擊直接進入專屬快速代儲通道！</p>
+                </div>
+            </div>
+
+            <div>
+                <input type="text" id="nicheSearchInput" oninput="filterNicheGames()" placeholder="快速尋找小眾遊戲（例如：緋紅神結界、碧藍航線、坎公騎冠劍...）" class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-teal-500">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="nicheGamesGrid">
+                <div onclick="selectNicheGame('蔚藍檔案 日服/國際服')" class="bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 hover:border-teal-500/50 p-4 rounded-2xl cursor-pointer transition flex items-center space-x-3.5">
+                    <div class="w-10 h-10 bg-cyan-950 text-cyan-400 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 border border-cyan-800">BA</div>
+                    <div>
+                        <div class="text-sm font-bold text-slate-200">蔚藍檔案 (Blue Archive)</div>
+                        <div class="text-xs text-slate-400">日服 / 國際服 專屬直達</div>
+                    </div>
+                </div>
+                <div onclick="selectNicheGame('賽馬娘 Pretty Derby')" class="bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 hover:border-teal-500/50 p-4 rounded-2xl cursor-pointer transition flex items-center space-x-3.5">
+                    <div class="w-10 h-10 bg-amber-950 text-amber-400 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 border border-amber-800">馬</div>
+                    <div>
+                        <div class="text-sm font-bold text-slate-200">賽馬娘 Pretty Derby</div>
+                        <div class="text-xs text-slate-400">日服 / 台服 專屬直達</div>
+                    </div>
+                </div>
+                <div onclick="selectNicheGame('FGO 命運冠位指定')" class="bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 hover:border-teal-500/50 p-4 rounded-2xl cursor-pointer transition flex items-center space-x-3.5">
+                    <div class="w-10 h-10 bg-purple-950 text-purple-400 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 border border-purple-800">FGO</div>
+                    <div>
+                        <div class="text-sm font-bold text-slate-200">FGO 命運冠位指定</div>
+                        <div class="text-xs text-slate-400">日服 / 繁中服 禮包代購</div>
+                    </div>
+                </div>
+                <div onclick="selectNicheGame('碧藍航線 Azur Lane')" class="bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 hover:border-teal-500/50 p-4 rounded-2xl cursor-pointer transition flex items-center space-x-3.5">
+                    <div class="w-10 h-10 bg-blue-950 text-blue-400 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 border border-blue-800">AL</div>
+                    <div>
+                        <div class="text-sm font-bold text-slate-200">碧藍航線 Azur Lane</div>
+                        <div class="text-xs text-slate-400">日服 / 陸服 / 台服</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/40 p-4 rounded-2xl border border-slate-700/60 text-center space-y-2">
+                <p class="text-xs text-slate-300">找不到您的專屬冷門遊戲？我們支援人工代客尋找與全網代儲！</p>
+                <button onclick="requestCustomGame()" class="bg-teal-600 hover:bg-teal-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow">
+                    <i class="fa-solid fa-headset mr-1"></i> 提交客製化代儲需求單
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL 2: Price Comparison Modal ================= -->
+    <div id="compareModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl space-y-6 relative">
+            <button onclick="closeCompareModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white bg-slate-800 w-9 h-9 rounded-full flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-2xl flex items-center justify-center text-xl border border-emerald-500/20">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">多家賣家價格與速度即時比價</h3>
+                    <p class="text-xs text-slate-400">為您尋找全網最划算、最高安全指數的優質代儲商</p>
+                </div>
+            </div>
+            <div id="compareContent" class="space-y-3">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL 3: 3-Step Foolproof Top-Up Wizard ================= -->
+    <div id="topUpWizardModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 relative">
+            <button onclick="closeTopUpWizard()" class="absolute top-6 right-6 text-slate-400 hover:text-white bg-slate-800 w-9 h-9 rounded-full flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Header & Step Indicator -->
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-bolt-lightning text-emerald-400"></i> 三步驟極速代儲精靈
+                    </h3>
+                    <span class="text-xs bg-emerald-950 text-emerald-300 px-3 py-1 rounded-full font-bold border border-emerald-800/60" id="wizardStepIndicator">步驟 1 / 3</span>
+                </div>
+                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                    <div id="wizardProgressBar" class="bg-emerald-500 h-full w-1/3 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Step 1 -->
+            <div id="wizardStep1" class="wizard-step space-y-4">
+                <label class="block text-xs font-bold text-slate-300">1. 確認儲值遊戲與方案</label>
+                <div class="space-y-3">
+                    <div>
+                        <span class="text-[11px] text-slate-400 block mb-1">選擇遊戲</span>
+                        <select id="wizardGameSelect" class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+                            <option value="RO 仙境傳說：愛如初見">RO 仙境傳說：愛如初見</option>
+                            <option value="原神 / 崩壞：星穹鐵道">原神 / 崩壞：星穹鐵道</option>
+                            <option value="天堂 W / 天堂M">天堂 W / 天堂M</option>
+                            <option value="傳說對決 / 王者榮耀">傳說對決 / 王者榮耀</option>
+                            <option value="鳴潮 Wuthering Waves">鳴潮 Wuthering Waves</option>
+                            <option value="開局一個海水過濾器">日韓服手遊 (賽馬娘/蔚藍檔案)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-slate-400 block mb-1">選擇方案面額</span>
+                        <select id="wizardPackageSelect" class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+                            <option value="6480鑽石/結晶包 (NT$ 2,790)">6480鑽石/結晶包 (NT$ 2,790) - 熱銷推薦</option>
+                            <option value="3280鑽石/結晶包 (NT$ 1,490)">3280鑽石/結晶包 (NT$ 1,490)</option>
+                            <option value="1980鑽石/結晶包 (NT$ 990)">1980鑽石/結晶包 (NT$ 990)</option>
+                            <option value="首儲雙倍豪華大禮包 (NT$ 1,590)">首儲雙倍豪華大禮包 (NT$ 1,590)</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="goToWizardStep(2)" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold py-4 rounded-2xl text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 mt-4">
+                    <span>下一步：輸入玩家帳號資料</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Step 2 -->
+            <div id="wizardStep2" class="wizard-step space-y-4 hidden">
+                <label class="block text-xs font-bold text-slate-300">2. 輸入遊戲角色 ID 與伺服器</label>
+                <div class="space-y-3">
+                    <div>
+                        <span class="text-[11px] text-slate-400 block mb-1">伺服器 / 登入方式</span>
+                        <select id="wizardServerSelect" class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+                            <option value="官方伺服器 (iOS / Android / PC通用)">官方伺服器 (iOS / Android / PC通用)</option>
+                            <option value="Google 帳號登入">Google 帳號登入</option>
+                            <option value="Apple ID 登入">Apple ID 登入</option>
+                            <option value="UID 直充專用">UID 直充專用</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-slate-400 block mb-1">遊戲角色 ID / UID / 角色名稱</span>
+                        <input type="text" id="wizardPlayerId" placeholder="例如：100928341 或 角色名稱" class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+                        <span class="text-[11px] text-amber-400 mt-1 block"><i class="fa-solid fa-triangle-exclamation"></i> 請務必確認ID正確，代儲商品發貨後無法退款。</span>
+                    </div>
+                </div>
+                <div class="flex space-x-3 mt-4">
+                    <button onclick="goToWizardStep(1)" class="w-1/3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-4 rounded-2xl text-sm transition">上一步</button>
+                    <button onclick="goToWizardStep(3)" class="w-2/3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold py-4 rounded-2xl text-sm transition shadow-lg shadow-emerald-500/20">下一步：選擇付款方式</button>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div id="wizardStep3" class="wizard-step space-y-4 hidden">
+                <label class="block text-xs font-bold text-slate-300">3. 選擇安全付款方式與結帳</label>
+                <div class="space-y-2">
+                    <label class="flex items-center justify-between p-4 bg-slate-800 border border-emerald-500/50 rounded-2xl cursor-pointer hover:bg-slate-750 transition">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
+                                <i class="fa-solid fa-credit-card"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-white">線上信用卡 / Apple Pay</div>
+                                <div class="text-[10px] text-slate-400">免手續費，即時入帳</div>
+                            </div>
+                        </div>
+                        <input type="radio" name="paymentMethod" checked class="text-emerald-500 focus:ring-emerald-500">
+                    </label>
+                    <label class="flex items-center justify-between p-4 bg-slate-800 border border-slate-700 rounded-2xl cursor-pointer hover:bg-slate-750 transition">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center border border-teal-500/20">
+                                <i class="fa-solid fa-barcode"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-white">超商代碼繳費 (7-11 / 全家)</div>
+                                <div class="text-[10px] text-slate-400">手續費 NT$ 30</div>
+                            </div>
+                        </div>
+                        <input type="radio" name="paymentMethod" class="text-emerald-500 focus:ring-emerald-500">
+                    </label>
+                    <label class="flex items-center justify-between p-4 bg-slate-800 border border-slate-700 rounded-2xl cursor-pointer hover:bg-slate-750 transition">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center border border-violet-500/20">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-white">街口支付 / LINE Pay</div>
+                                <div class="text-[10px] text-slate-400">享 2% 現金回饋</div>
+                            </div>
+                        </div>
+                        <input type="radio" name="paymentMethod" class="text-emerald-500 focus:ring-emerald-500">
+                    </label>
+                </div>
+
+                <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700 space-y-1.5 text-xs">
+                    <div class="flex justify-between text-slate-300"><span>商品金額：</span><span class="font-bold text-white">NT$ 2,790</span></div>
+                    <div class="flex justify-between text-slate-300"><span>平台合約保險：</span><span class="text-emerald-400 font-semibold">免費贈送 (100%賠付)</span></div>
+                    <div class="border-t border-slate-700 pt-2 flex justify-between font-extrabold text-sm text-emerald-400"><span>應付總額：</span><span>NT$ 2,790</span></div>
+                </div>
+
+                <div class="flex space-x-3 mt-4">
+                    <button onclick="goToWizardStep(2)" class="w-1/3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-4 rounded-2xl text-sm transition">上一步</button>
+                    <button onclick="completeOrder()" class="w-2/3 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black py-4 rounded-2xl text-sm transition shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-check-circle"></i> 確認送出並付款
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- 1. One-Click Senior Mode Mode Switch ---
+        let isSeniorMode = false;
+        function toggleSeniorMode() {
+            isSeniorMode = !isSeniorMode;
+            const toggleBtn = document.getElementById('seniorToggleBtn');
+            const toggleThumb = document.getElementById('seniorToggleThumb');
+            const label = document.getElementById('seniorModeLabel');
+
+            const standardMain = document.getElementById('standardMainView');
+            const seniorMain = document.getElementById('seniorMainView');
+            const standardBanner = document.getElementById('standardTopBanner');
+            const standardHeaderSearch = document.getElementById('standardHeaderSearch');
+            const standardNicheBtn = document.getElementById('standardNicheBtn');
+
+            if (isSeniorMode) {
+                // Show Senior View, Hide Standard Clutter
+                standardMain.classList.add('hidden');
+                seniorMain.classList.remove('hidden');
+                if(standardBanner) standardBanner.classList.add('hidden');
+                if(standardHeaderSearch) standardHeaderSearch.classList.add('hidden');
+                if(standardNicheBtn) standardNicheBtn.classList.add('hidden');
+
+                toggleBtn.classList.remove('bg-slate-800');
+                toggleBtn.classList.add('bg-emerald-500');
+                toggleThumb.classList.add('translate-x-8');
+                label.textContent = '長輩模式 (已開啟)';
+                
+                // Reset Senior view to step 1
+                seniorBackToStep1();
+            } else {
+                // Show Standard Marketplace View
+                standardMain.classList.remove('hidden');
+                seniorMain.classList.add('hidden');
+                if(standardBanner) standardBanner.classList.remove('hidden');
+                if(standardHeaderSearch) standardHeaderSearch.classList.remove('hidden');
+                if(standardNicheBtn) standardNicheBtn.classList.remove('hidden');
+
+                toggleBtn.classList.remove('bg-emerald-500');
+                toggleBtn.classList.add('bg-slate-800');
+                toggleThumb.classList.remove('translate-x-8');
+                label.textContent = '長輩關懷模式';
+            }
+        }
+
+        // --- Senior Mode Step Navigation & Simulated Voice ---
+        let seniorCategory = '手機遊戲';
+        
+        function seniorSelectCategory(catName) {
+            seniorCategory = catName;
+            document.getElementById('seniorSelectedCatBadge').textContent = `已選擇：${catName}`;
+            document.getElementById('seniorStep1Categories').classList.add('hidden');
+            document.getElementById('seniorStep2Input').classList.remove('hidden');
+        }
+
+        function seniorBackToStep1() {
+            document.getElementById('seniorStep1Categories').classList.remove('hidden');
+            document.getElementById('seniorStep2Input').classList.add('hidden');
+            document.getElementById('seniorGameInput').value = '';
+            document.getElementById('voiceStatusMsg').classList.add('hidden');
+        }
+
+        function triggerSeniorVoiceInput() {
+            const voiceBtn = document.getElementById('seniorVoiceBtn');
+            const voiceBtnText = document.getElementById('seniorVoiceBtnText');
+            const statusMsg = document.getElementById('voiceStatusMsg');
+            const gameInput = document.getElementById('seniorGameInput');
+
+            voiceBtn.classList.add('voice-active');
+            voiceBtnText.textContent = "系統正在聆聽...";
+            statusMsg.classList.remove('hidden');
+
+            // Simulate voice recognition after 2.5 seconds
+            setTimeout(() => {
+                gameInput.value = "原神";
+                voiceBtn.classList.remove('voice-active');
+                voiceBtnText.textContent = "按此語音輸入";
+                statusMsg.classList.add('hidden');
+                alertBox("【語音輸入成功】辨識出您說的遊戲名稱為「原神」，已為您充填完成！");
+            }, 2500);
+        }
+
+        function seniorQuickSelect(gameName) {
+            document.getElementById('seniorGameInput').value = gameName;
+        }
+
+        function seniorConfirmGameAndNext() {
+            const val = document.getElementById('seniorGameInput').value.trim();
+            if(!val) {
+                alertBox("請先輸入或用語音說出遊戲名稱！");
+                return;
+            }
+            openTopUpWizard();
+            document.getElementById('wizardGameSelect').value = "原神 / 崩壞：星穹鐵道";
+        }
+
+        // --- 2. Smart Search & Auto-complete (Standard Mode) ---
+        const searchInput = document.getElementById('headerSearchInput');
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
+        const searchDropdown = document.getElementById('searchDropdown');
+        const suggestionsList = document.getElementById('searchSuggestionsList');
+
+        const mockSuggestions = [
+            { game: 'RO 仙境傳說：愛如初見', type: '熱門代儲', price: 'NT$ 2,790起' },
+            { game: '原神 / 崩壞：星穹鐵道', type: '官方直充', price: 'NT$ 1,490起' },
+            { game: '天堂 W / 天堂M', type: '鑽石交易', price: 'NT$ 4,900起' },
+            { game: '傳說對決 / 王者榮耀', type: '點券秒發', price: 'NT$ 290起' },
+            { game: '鳴潮 Wuthering Waves', type: '星聲禮包', price: 'NT$ 890起' },
+            { game: '開局一個海水過濾器', type: '冷門直送', price: 'NT$ 450起' }
+        ];
+
+        if(searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim();
+                if(val.length > 0) {
+                    searchDropdown.classList.remove('hidden');
+                    renderSuggestions(val);
+                } else {
+                    searchDropdown.classList.add('hidden');
+                }
+            });
+            searchInput.addEventListener('blur', () => {
+                setTimeout(() => searchDropdown.classList.add('hidden'), 200);
+            });
+        }
+
+        function renderSuggestions(query) {
+            const filtered = mockSuggestions.filter(s => s.game.includes(query) || s.type.includes(query));
+            if(filtered.length === 0) {
+                suggestionsList.innerHTML = `<div class="p-4 text-xs text-slate-400 text-center">沒有找到相關遊戲，點擊「冷門遊戲直達」尋找小眾伺服器。</div>`;
+                return;
+            }
+            suggestionsList.innerHTML = filtered.map(item => `
+                <div onclick="selectSuggestion('${item.game}')" class="p-3.5 hover:bg-slate-800 cursor-pointer flex items-center justify-between transition">
+                    <div class="flex items-center space-x-2.5">
+                        <i class="fa-solid fa-gamepad text-emerald-400"></i>
+                        <span class="text-xs font-bold text-white">${item.game}</span>
+                        <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">${item.type}</span>
+                    </div>
+                    <span class="text-xs text-emerald-400 font-bold">${item.price}</span>
+                </div>
+            `).join('');
+        }
+
+        function selectSuggestion(gameName) {
+            if(searchInput) searchInput.value = gameName;
+            searchDropdown.classList.add('hidden');
+            filterGameByKeyword(gameName);
+        }
+
+        function triggerSearch() {
+            const query = (searchInput ? searchInput.value : '') || (mobileSearchInput ? mobileSearchInput.value : '');
+            if(!query) {
+                alertBox("請先輸入要搜尋的遊戲名稱或代儲關鍵字");
+                return;
+            }
+            filterGameByKeyword(query);
+        }
+
+        function filterGameByKeyword(keyword) {
+            const cards = document.querySelectorAll('.listing-card');
+            let matchCount = 0;
+            cards.forEach(card => {
+                const text = card.textContent;
+                if(text.includes(keyword) || keyword === 'all') {
+                    card.style.display = 'flex';
+                    matchCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            document.getElementById('resultCount').textContent = `共 ${matchCount} 筆商品`;
+        }
+
+        // --- 3. Sorting & Filtering Listings ---
+        function filterGame(gameKey) {
+            const cards = document.querySelectorAll('.listing-card');
+            let count = 0;
+            cards.forEach(card => {
+                const g = card.getAttribute('data-game');
+                if(gameKey === 'all' || g === gameKey) {
+                    card.style.display = 'flex';
+                    count++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            document.getElementById('resultCount').textContent = `共 ${count} 筆商品`;
+        }
+
+        function sortListings(criteria) {
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-500', 'text-slate-950', 'shadow');
+                btn.classList.add('bg-slate-800', 'text-slate-300', 'border', 'border-slate-700/80');
+            });
+            event.currentTarget.classList.remove('bg-slate-800', 'text-slate-300', 'border');
+            event.currentTarget.classList.add('bg-emerald-500', 'text-slate-950', 'shadow');
+
+            const container = document.getElementById('listingsContainer');
+            const cardsArray = Array.from(container.querySelectorAll('.listing-card'));
+
+            cardsArray.sort((a, b) => {
+                if(criteria === 'price-asc') {
+                    return parseInt(a.getAttribute('data-price')) - parseInt(b.getAttribute('data-price'));
+                } else if(criteria === 'speed') {
+                    return parseInt(a.getAttribute('data-speed')) - parseInt(b.getAttribute('data-speed'));
+                } else if(criteria === 'safety') {
+                    return parseInt(b.getAttribute('data-safety')) - parseInt(a.getAttribute('data-safety'));
+                } else if(criteria === 'discount') {
+                    return parseInt(a.getAttribute('data-discount')) - parseInt(b.getAttribute('data-discount'));
+                }
+            });
+
+            cardsArray.forEach(card => container.appendChild(card));
+        }
+
+        function applyFilters() {
+            const fastOnly = document.getElementById('fastOnly').checked;
+            const cards = document.querySelectorAll('.listing-card');
+            let count = 0;
+            cards.forEach(card => {
+                let show = true;
+                const speed = parseInt(card.getAttribute('data-speed'));
+                if(fastOnly && speed > 10) show = false;
+                if(show) {
+                    card.style.display = 'flex';
+                    count++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            document.getElementById('resultCount').textContent = `共 ${count} 筆商品`;
+        }
+
+        // --- 4. Niche Game Modal ---
+        function openNicheModal() { document.getElementById('nicheModal').classList.remove('hidden'); }
+        function closeNicheModal() { document.getElementById('nicheModal').classList.add('hidden'); }
+        function selectNicheGame(gameName) {
+            closeNicheModal();
+            openTopUpWizard();
+            document.getElementById('wizardGameSelect').value = gameName;
+        }
+        function filterNicheGames() {
+            const query = document.getElementById('nicheSearchInput').value.toLowerCase();
+            const items = document.querySelectorAll('#nicheGamesGrid > div');
+            items.forEach(item => {
+                if(item.textContent.toLowerCase().includes(query)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        function requestCustomGame() {
+            closeNicheModal();
+            alertBox("已為您提交客製化代儲尋找單！客服專員將在 3 分鐘內透過站內訊息與您聯繫。");
+        }
+
+        // --- 5. Price Comparison Modal ---
+        function compareItem(itemName, basePrice) {
+            document.getElementById('compareModal').classList.remove('hidden');
+            const container = document.getElementById('compareContent');
+
+            const mockSellers = [
+                { name: '【NEXUS官方直營旗艦】', price: basePrice, speed: '3分鐘', safety: '100%', rating: '5.0 (1.2萬則評價)', badge: '官方合約' },
+                { name: '【極速工作室 24H發貨】', price: basePrice - 50, speed: '8分鐘', safety: '98.5%', rating: '4.9 (4,300則評價)', badge: '熱銷特惠' },
+                { name: '【玩家金主直銷保證】', price: basePrice - 100, speed: '15分鐘', safety: '97.0%', rating: '4.8 (890則評價)', badge: '超低價' }
+            ];
+
+            container.innerHTML = mockSellers.map(s => `
+                <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-4 flex items-center justify-between hover:border-emerald-500/50 transition">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-1">
+                            <span class="text-xs font-bold text-white">${s.name}</span>
+                            <span class="text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800">${s.badge}</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-[11px] text-slate-400">
+                            <span><i class="fa-solid fa-bolt text-amber-400"></i> ${s.speed}</span>
+                            <span><i class="fa-solid fa-shield text-emerald-400"></i> 安全 ${s.safety}</span>
+                            <span><i class="fa-solid fa-star text-amber-400"></i> ${s.rating}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-base font-black text-emerald-400">NT$ ${s.price}</div>
+                        <button onclick="closeCompareModal(); startWizardWithItem('${itemName}', '${itemName}', ${s.price})" class="mt-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-3 py-1.5 rounded-xl text-xs font-extrabold shadow">
+                            選擇此賣家
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function closeCompareModal() { document.getElementById('compareModal').classList.add('hidden'); }
+
+        // --- 6. 3-Step Top-Up Wizard ---
+        function openTopUpWizard() {
+            document.getElementById('topUpWizardModal').classList.remove('hidden');
+            goToWizardStep(1);
+        }
+        function closeTopUpWizard() { document.getElementById('topUpWizardModal').classList.add('hidden'); }
+        function startWizardWithItem(gameName, packageName, price) {
+            openTopUpWizard();
+            const gameSelect = document.getElementById('wizardGameSelect');
+            for(let opt of gameSelect.options) {
+                if(opt.value.includes(gameName.split(' ')[0])) {
+                    gameSelect.value = opt.value;
+                    break;
+                }
+            }
+        }
+        function goToWizardStep(step) {
+            document.getElementById('wizardStep1').classList.add('hidden');
+            document.getElementById('wizardStep2').classList.add('hidden');
+            document.getElementById('wizardStep3').classList.add('hidden');
+
+            document.getElementById(`wizardStep${step}`).classList.remove('hidden');
+            document.getElementById('wizardStepIndicator').textContent = `步驟 ${step} / 3`;
+
+            const progressBar = document.getElementById('wizardProgressBar');
+            if(step === 1) progressBar.style.width = '33%';
+            else if(step === 2) progressBar.style.width = '66%';
+            else if(step === 3) progressBar.style.width = '100%';
+        }
+        function completeOrder() {
+            closeTopUpWizard();
+            alertBox("【下單成功】訂單編號 #NEXUS-2026-0414-998 已經成立！請至付款頁完成結帳，專業代儲專員將立即為您處理。");
+        }
+
+        // Custom Message Box
+        function alertBox(message) {
+            const modal = document.createElement('div');
+            modal.className = "fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4";
+            modal.innerHTML = `
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
+                    <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-xl border border-emerald-500/20">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </div>
+                    <p class="text-sm text-slate-200 leading-relaxed font-medium">${message}</p>
+                    <button onclick="this.closest('.fixed').remove()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 py-3 rounded-2xl text-xs font-black transition">
+                        確定
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+    </script>
+</body>
+</html>
