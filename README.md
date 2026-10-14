@@ -4,7 +4,7 @@
 
 ## 線上網址
 
-- Render Static Site：待部署後補上
+- 網站（GitHub Pages）：https://a9492520-cloud.github.io/6hw-website/
 - GitHub Repo：https://github.com/a9492520-cloud/6hw-website
 
 ## 檔案
