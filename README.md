@@ -14,4 +14,3 @@
 ## 備註
 
 - 本專案為靜態網頁，前端資源（Tailwind CSS、Font Awesome、Google Fonts）皆由 CDN 載入。
-- 部署教學投影片（*.pptx）依需求不上傳。
