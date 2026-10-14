@@ -7,3 +7,7 @@ Thumbs.db
 .DS_Store
 __pycache__/
 *.pyc
+
+# 本機檔案（不上傳）
+index_old_backup.html
+modern_game_top_up_saas_platform.html
