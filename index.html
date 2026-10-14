@@ -262,18 +262,6 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: Compare Sellers ================= -->
-    <div id="compareModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeCompareModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white bg-slate-800 w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
-            <div class="flex items-center space-x-3">
-                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-2xl flex items-center justify-center text-xl border border-emerald-500/20"><i class="fa-solid fa-scale-balanced"></i></div>
-                <div><h3 class="text-xl font-bold text-white">多家賣家即時比價</h3><p class="text-xs text-slate-400">為您找出最划算、最高安全指數的代儲商</p></div>
-            </div>
-            <div id="compareContent" class="space-y-3"></div>
-        </div>
-    </div>
-
     <!-- ================= MODAL: 3-Step Wizard ================= -->
     <div id="wizardModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[92vh] overflow-y-auto">
@@ -404,6 +392,17 @@
         { id:'azurlane', name:'碧藍航線 Azur Lane', cat:'冷門專區', genre:'niche', icon:'fa-ship', grad:'from-sky-500 to-indigo-500', hot:700, unit:'紅鑽', plans:[[60,100],[300,450],[980,1490],[6480,2790]] }
     ];
 
+    // 店家（賣家）：不同店家承做同款遊戲代儲，價格與評價不同。依評價好評優先排序。
+    const SELLERS = [
+        { name: 'NEXUS 官方直營旗艦店', badge: '官方合約', rating: 5.0, reviews: '1.2萬則', speed: '約 3 分鐘',  safety: '100%',  factor: 1.00, note: '官方直充・100% 賠付' },
+        { name: '極速代儲 24H 工作室',  badge: '熱銷',     rating: 4.9, reviews: '4,300則', speed: '約 8 分鐘',  safety: '98.5%', factor: 0.93, note: '深夜也出貨' },
+        { name: '安心老店・十年誠信',   badge: '老字號',   rating: 4.9, reviews: '2,100則', speed: '約 10 分鐘', safety: '99.2%', factor: 0.96, note: '評價穩定' },
+        { name: '玩家金主直營',        badge: '超低價',   rating: 4.8, reviews: '890則',   speed: '約 15 分鐘', safety: '97.0%', factor: 0.88, note: '最便宜・需稍等' }
+    ];
+    // 好評優先（評價最高排第一，解決原站「最高評價賣家不在第一」的問題）
+    const SELLER_LIST = SELLERS.slice().sort((a, b) => b.rating - a.rating);
+    const sellerPrice = (base, factor) => Math.max(50, Math.round(base * factor / 10) * 10);
+
     const state = { cat: 'featured', keyword: '' };
     const $ = id => document.getElementById(id);
     const fmt = n => n >= 10000 ? (n / 10000).toFixed(1).replace('.0', '') + '萬' : n.toLocaleString();
@@ -503,10 +502,12 @@
 
     // ======================= GAME DETAIL =======================
     let currentGame = null;
+    let detailPlan = 0;
     function openGame(id) {
         const g = GAMES.find(x => x.id === id);
         if (!g) return;
         currentGame = g;
+        detailPlan = 0;
         $('gameDetailView').innerHTML = `
             <button onclick="backHome()" class="flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-white mb-5 transition">
                 <i class="fa-solid fa-arrow-left"></i> 返回遊戲列表
@@ -522,39 +523,80 @@
                     <div class="flex flex-wrap items-center gap-x-4 gap-y-1 justify-center sm:justify-start text-xs text-slate-400 mt-3">
                         <span><i class="fa-solid fa-star text-amber-400"></i> 4.9（1.2萬則評價）</span>
                         <span><i class="fa-solid fa-fire text-orange-400"></i> 熱度 ${fmt(g.hot)}</span>
-                        <span><i class="fa-solid fa-shield-halved text-emerald-400"></i> 合約保證 100% 賠付</span>
+                        <span><i class="fa-solid fa-store text-emerald-400"></i> ${SELLER_LIST.length} 家店家可選</span>
                         <span><i class="fa-solid fa-bolt text-amber-400"></i> 平均 5 分鐘到帳</span>
                     </div>
                 </div>
             </div>
 
-            <h2 class="text-lg font-black text-white mt-8 mb-1">選擇儲值方案</h2>
-            <p class="text-xs text-slate-400 mb-4">選好方案後再輸入帳號與付款，最後才進入結帳，流程清楚不迷路。</p>
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                ${g.plans.map((p, i) => `
-                    <div class="bg-slate-900 border border-slate-800 hover:border-emerald-500/60 rounded-2xl p-4 flex flex-col transition">
-                        <div class="text-[11px] text-slate-400 font-bold mb-1">方案 ${i + 1}</div>
-                        <div class="text-base font-black text-white">${p[0]} <span class="text-xs text-slate-400 font-normal">${g.unit}</span></div>
-                        <div class="text-2xl font-black text-emerald-400 mt-2">NT$ ${p[1]}</div>
-                        <button onclick="openWizard('${g.id}', ${i})" class="mt-4 w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold py-2.5 rounded-xl text-xs transition shadow-lg shadow-emerald-500/20">
-                            <i class="fa-solid fa-cart-shopping"></i> 選購
-                        </button>
-                    </div>`).join('')}
-            </div>
+            <h2 class="text-lg font-black text-white mt-8 mb-1">① 選擇儲值方案</h2>
+            <p class="text-xs text-slate-400 mb-4">先選好要儲值的品項與金額。</p>
+            <div id="planChips" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
 
-            <div class="flex flex-col sm:flex-row gap-3 mt-6">
-                <button onclick="compareGame('${g.id}')" class="flex-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold py-3.5 rounded-2xl text-sm transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-scale-balanced text-emerald-400"></i> 多家賣家比價
-                </button>
-                <button onclick="alertBox('已開啟線上客服，專員將盡快與您聯繫協助處理。')" class="flex-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold py-3.5 rounded-2xl text-sm transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-headset text-teal-400"></i> 聯絡專人客服
-                </button>
+            <div class="flex items-center justify-between flex-wrap gap-2 mt-8 mb-1">
+                <h2 class="text-lg font-black text-white">② 選擇店家</h2>
+                <span class="text-[11px] text-emerald-400 font-bold bg-emerald-950/60 border border-emerald-800/60 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-arrow-down-wide-short"></i> 已依評價好評優先排序</span>
             </div>
+            <p class="text-xs text-slate-400 mb-4">同款代儲由多家店家提供，價格與評價不同，確認後選擇喜歡的店家結帳。</p>
+            <div id="sellerList" class="space-y-3"></div>
+
+            <button onclick="alertBox('已開啟線上客服，專員將盡快與您聯繫協助處理。')" class="w-full mt-8 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold py-3.5 rounded-2xl text-sm transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-headset text-teal-400"></i> 找不到喜歡的店家？聯絡專人客服
+            </button>
         `;
+        renderPlanChips();
+        renderSellerList();
         $('homeView').classList.add('hidden');
         $('seniorView').classList.add('hidden');
         $('gameDetailView').classList.remove('hidden');
         window.scrollTo(0, 0);
+    }
+    function renderPlanChips() {
+        const g = currentGame;
+        $('planChips').innerHTML = g.plans.map((p, i) => `
+            <button onclick="selectPlan(${i})" data-plan="${i}"
+                class="plan-chip text-left bg-slate-900 border rounded-2xl p-4 flex flex-col transition ${i === detailPlan ? 'border-emerald-500 ring-2 ring-emerald-500/30' : 'border-slate-800 hover:border-emerald-500/60'}">
+                <div class="text-[11px] text-slate-400 font-bold mb-1">方案 ${i + 1}</div>
+                <div class="text-base font-black text-white">${p[0]} <span class="text-xs text-slate-400 font-normal">${g.unit}</span></div>
+                <div class="text-2xl font-black text-emerald-400 mt-2">NT$ ${p[1]}</div>
+            </button>`).join('');
+    }
+    function selectPlan(i) { detailPlan = i; renderPlanChips(); renderSellerList(); }
+    function renderSellerList() {
+        const g = currentGame;
+        const base = g.plans[detailPlan][1];
+        $('sellerList').innerHTML = SELLER_LIST.map((s, idx) => {
+            const price = sellerPrice(base, s.factor);
+            const rec = idx === 0;
+            return `
+            <div class="bg-slate-900 border ${rec ? 'border-emerald-500/60' : 'border-slate-800'} rounded-2xl p-4 transition hover:border-emerald-500/60">
+                <div class="flex items-start justify-between gap-4 flex-wrap">
+                    <div class="flex items-center gap-3 min-w-[240px]">
+                        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center text-slate-950 text-lg flex-shrink-0"><i class="fa-solid fa-store"></i></div>
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="text-sm font-bold text-white">${s.name}</span>
+                                <span class="text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800 font-bold">${s.badge}</span>
+                                ${rec ? '<span class="text-[10px] bg-amber-500 text-slate-950 px-2 py-0.5 rounded font-black"><i class="fa-solid fa-crown"></i> 好評推薦</span>' : ''}
+                            </div>
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400 mt-1">
+                                <span><i class="fa-solid fa-star text-amber-400"></i> ${s.rating}（${s.reviews}）</span>
+                                <span><i class="fa-solid fa-bolt text-amber-400"></i> ${s.speed}</span>
+                                <span><i class="fa-solid fa-shield text-emerald-400"></i> 安全 ${s.safety}</span>
+                                <span class="text-slate-500">${s.note}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        <div class="text-[11px] text-slate-400">${g.plans[detailPlan][0]} ${g.unit}</div>
+                        <div class="text-xl font-black text-emerald-400">NT$ ${price}</div>
+                        <button onclick="openWizard('${g.id}', ${detailPlan}, ${idx})" class="mt-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-4 py-2 rounded-xl text-xs font-extrabold shadow-lg shadow-emerald-500/20">
+                            <i class="fa-solid fa-cart-shopping"></i> 選擇此店家
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
     }
     function backHome() {
         $('gameDetailView').classList.add('hidden');
@@ -623,30 +665,39 @@
 
     // ======================= WIZARD =======================
     let order = null;
-    function openWizard(gameId, planIndex) {
+    function currentSeller() { return SELLER_LIST[order.sellerIndex] || SELLER_LIST[0]; }
+    function orderPrice() { return sellerPrice(order.game.plans[order.planIndex][1], currentSeller().factor); }
+    function openWizard(gameId, planIndex, sellerIndex) {
         const g = GAMES.find(x => x.id === gameId) || GAMES[0];
-        order = { game: g, planIndex: planIndex || 0 };
+        order = { game: g, planIndex: planIndex || 0, sellerIndex: sellerIndex || 0 };
         renderWizardStep1();
         $('wizardModal').classList.remove('hidden');
         goToWizardStep(1);
     }
     function renderWizardStep1() {
-        const g = order.game;
+        const g = order.game, seller = currentSeller();
         $('wizardStep1').innerHTML = `
-            <label class="block text-xs font-bold text-slate-300">1. 確認儲值遊戲與方案</label>
+            <label class="block text-xs font-bold text-slate-300">1. 確認遊戲、店家與方案</label>
             <div class="flex items-center gap-3 bg-slate-800/60 border border-slate-700 rounded-2xl p-3">
                 <span class="w-10 h-10 rounded-xl bg-gradient-to-tr ${g.grad} flex items-center justify-center text-slate-950"><i class="fa-solid ${g.icon}"></i></span>
                 <div><div class="text-sm font-bold text-white">${g.name}</div><div class="text-[11px] text-slate-400">${g.cat}</div></div>
             </div>
+            <div class="flex items-center gap-3 bg-slate-800/60 border border-emerald-700/50 rounded-2xl p-3">
+                <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center text-slate-950"><i class="fa-solid fa-store"></i></span>
+                <div class="flex-1">
+                    <div class="text-sm font-bold text-white">${seller.name}</div>
+                    <div class="text-[11px] text-slate-400"><i class="fa-solid fa-star text-amber-400"></i> ${seller.rating} ・ ${seller.speed} ・ 安全 ${seller.safety}</div>
+                </div>
+            </div>
             <div>
                 <span class="text-[11px] text-slate-400 block mb-1">選擇方案</span>
                 <select id="wizardPlanSelect" onchange="updateOrderPrice()" class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-500">
-                    ${g.plans.map((p, i) => `<option value="${i}" ${i === order.planIndex ? 'selected' : ''}>${p[0]} ${g.unit} — NT$ ${p[1]}</option>`).join('')}
+                    ${g.plans.map((p, i) => `<option value="${i}" ${i === order.planIndex ? 'selected' : ''}>${p[0]} ${g.unit} — NT$ ${sellerPrice(p[1], seller.factor)}</option>`).join('')}
                 </select>
             </div>
             <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700 flex items-center justify-between">
-                <span class="text-xs text-slate-300">方案金額</span>
-                <span id="wizardStep1Price" class="text-lg font-black text-emerald-400">NT$ ${g.plans[order.planIndex][1]}</span>
+                <span class="text-xs text-slate-300">方案金額（${seller.name}）</span>
+                <span id="wizardStep1Price" class="text-lg font-black text-emerald-400">NT$ ${orderPrice()}</span>
             </div>
             <button onclick="goToWizardStep(2)" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold py-4 rounded-2xl text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
                 <span>下一步：輸入玩家帳號資料</span><i class="fa-solid fa-arrow-right"></i>
@@ -654,7 +705,7 @@
     }
     function updateOrderPrice() {
         order.planIndex = parseInt($('wizardPlanSelect').value, 10);
-        $('wizardStep1Price').textContent = `NT$ ${order.game.plans[order.planIndex][1]}`;
+        $('wizardStep1Price').textContent = `NT$ ${orderPrice()}`;
     }
     function goToWizardStep(step) {
         [1, 2, 3].forEach(s => $('wizardStep' + s).classList.add('hidden'));
@@ -664,49 +715,19 @@
         if (step === 3) renderWizardSummary();
     }
     function renderWizardSummary() {
-        const g = order.game, p = g.plans[order.planIndex];
+        const g = order.game, p = g.plans[order.planIndex], seller = currentSeller();
         $('wizardSummary').innerHTML = `
             <div class="flex justify-between text-slate-300"><span>遊戲 / 方案：</span><span class="font-bold text-white">${g.name} · ${p[0]} ${g.unit}</span></div>
-            <div class="flex justify-between text-slate-300"><span>商品金額：</span><span class="font-bold text-white">NT$ ${p[1]}</span></div>
+            <div class="flex justify-between text-slate-300"><span>承做店家：</span><span class="font-bold text-white">${seller.name}（★${seller.rating}）</span></div>
+            <div class="flex justify-between text-slate-300"><span>商品金額：</span><span class="font-bold text-white">NT$ ${orderPrice()}</span></div>
             <div class="flex justify-between text-slate-300"><span>平台合約保險：</span><span class="text-emerald-400 font-semibold">免費贈送（100% 賠付）</span></div>
-            <div class="border-t border-slate-700 pt-2 flex justify-between font-extrabold text-sm text-emerald-400"><span>應付總額：</span><span>NT$ ${p[1]}</span></div>`;
+            <div class="border-t border-slate-700 pt-2 flex justify-between font-extrabold text-sm text-emerald-400"><span>應付總額：</span><span>NT$ ${orderPrice()}</span></div>`;
     }
     function closeWizard() { $('wizardModal').classList.add('hidden'); }
     function completeOrder() {
         closeWizard();
         alertBox(`【下單成功】訂單編號 #NEXUS-2026-0414-998 已成立！專業代儲專員將立即為您處理。`);
     }
-
-    // ======================= COMPARE =======================
-    function compareGame(gameId) {
-        const g = GAMES.find(x => x.id === gameId);
-        const base = g.plans[0][1];
-        const sellers = [
-            { name: '【NEXUS 官方直營旗艦】', price: base, speed: '3 分鐘', safety: '100%', rating: '5.0（1.2萬則）', badge: '官方合約' },
-            { name: '【極速工作室 24H】', price: Math.max(50, base - 50), speed: '8 分鐘', safety: '98.5%', rating: '4.9（4,300則）', badge: '熱銷特惠' },
-            { name: '【玩家金主直銷】', price: Math.max(50, base - 100), speed: '15 分鐘', safety: '97.0%', rating: '4.8（890則）', badge: '超低價' }
-        ];
-        $('compareContent').innerHTML = sellers.map((s, i) => `
-            <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-4 flex items-center justify-between hover:border-emerald-500/50 transition">
-                <div>
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="text-xs font-bold text-white">${s.name}</span>
-                        <span class="text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800">${s.badge}</span>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-3 text-[11px] text-slate-400">
-                        <span><i class="fa-solid fa-bolt text-amber-400"></i> ${s.speed}</span>
-                        <span><i class="fa-solid fa-shield text-emerald-400"></i> 安全 ${s.safety}</span>
-                        <span><i class="fa-solid fa-star text-amber-400"></i> ${s.rating}</span>
-                    </div>
-                </div>
-                <div class="text-right flex-shrink-0">
-                    <div class="text-base font-black text-emerald-400">NT$ ${s.price}</div>
-                    <button onclick="closeCompareModal(); openWizard('${g.id}', 0)" class="mt-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-3 py-1.5 rounded-xl text-xs font-extrabold shadow">選擇此賣家</button>
-                </div>
-            </div>`).join('');
-        $('compareModal').classList.remove('hidden');
-    }
-    function closeCompareModal() { $('compareModal').classList.add('hidden'); }
 
     // ======================= NICHE MODAL =======================
     function openNicheModal() {
