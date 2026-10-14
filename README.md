@@ -4,6 +4,7 @@
 
 ## 線上網址
 
+- 網站（Render Static Site）：https://sixhw-website.onrender.com
 - 網站（GitHub Pages）：https://a9492520-cloud.github.io/6hw-website/
 - GitHub Repo：https://github.com/a9492520-cloud/6hw-website
 
